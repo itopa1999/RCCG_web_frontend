@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         try {
-            const response = await fetch("http://127.0.0.1:8000/nysc_church/api/api/contact-form/", {
+            const response = await fetch("https://lucky1999.pythonanywhere.com/nysc_church/api/api/contact-form/", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),

@@ -282,3 +282,11 @@ if (token) {
 	// Show the element if the token exists
 	adminLink.style.visibility = "visible";
 }
+
+document.getElementById("logout").addEventListener("click", function(event) {
+    event.preventDefault();
+
+    localStorage.removeItem("nysc_token");
+
+    window.location.href = "login.html";
+});

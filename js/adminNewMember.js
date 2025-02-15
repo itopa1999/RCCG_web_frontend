@@ -11,15 +11,17 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedBatch = "";
     let selectedStream = "";
     let searchQuery = "";
+    let dateQuery = "";
 
     function fetchNewComers() {
-        let url = `http://127.0.0.1:8000/nysc_church/api/list/newComers/?page=${currentPage}`;
+        let url = `https://lucky1999.pythonanywhere.com/nysc_church/api/list/newComers/?page=${currentPage}`;
 
         // Append filters if available
         if (selectedYear) url += `&year=${selectedYear}`;
         if (selectedBatch) url += `&batch=${selectedBatch}`;
         if (selectedStream) url += `&stream=${selectedStream}`;
         if (searchQuery) url += `&search=${searchQuery}`;
+        if (dateQuery) url += `&date=${dateQuery}`;
 
         fetch(url, {
             method: 'GET',
@@ -27,12 +29,40 @@ document.addEventListener('DOMContentLoaded', function () {
                 'Authorization': `Bearer ${token}`
             }
         })
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
         .then(response => {
-            if (!response.ok) {
+            if (response.status === 401) {
+                // Handle Unauthorized error
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
-                    text: "Network response was not ok",
+                    text: "Unauthorized Access. Redirecting to login.",
+                });
+                window.location.href = 'index.html';
+                return null;  // Stop further execution
+            } 
+            else if (response.status === 400) {
+                // Handle Bad Request error
+                return response.json().then(errorData => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: errorData.message || "Bad request",
+                    });
+                    return null;  // Stop further execution
+                });
+            }
+            else if (!response.ok) {
+                // Handle any other errors
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: "Network response was not ok.",
                 });
                 return null;
             }
@@ -82,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <td>${member.state_code}</td>
                     <td>${member.dob}</td>
                     <td>${member.department}</td>
-                    <td>${new Date(member.date).toLocaleString()}</td>
+                    <td>${new Date(member.date).toLocaleDateString()}</td>
                 </tr>
             `;
             tableBody.innerHTML += row;
@@ -112,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Fetch session options
-    fetch("http://127.0.0.1:8000/nysc_church/api/list/session/", {
+    fetch("https://lucky1999.pythonanywhere.com/nysc_church/api/list/session/", {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -149,6 +179,11 @@ document.addEventListener('DOMContentLoaded', function () {
         fetchNewComers();  // Refresh data with search filter
     });
 
+    document.getElementById("dateInput").addEventListener("input", function () {
+        dateQuery = this.value.trim();
+        fetchNewComers();  // Refresh data with search filter
+    });
+
 
     function downloadCSV(data) {
         if (!Array.isArray(data) || data.length === 0) {
@@ -178,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Add data
         data.forEach((member, index) => {
-            let formattedDate = new Date(member.date).toLocaleString();
+            let formattedDate = new Date(member.date).toLocaleDateString();
             ws_data.push([
                 index + 1, 
                 member.name, 

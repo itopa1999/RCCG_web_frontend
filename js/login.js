@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new FormData(form);
 
         // Send the login request
-        fetch('http://127.0.0.1:8000/admins/api/login/', {
+        fetch('https://lucky1999.pythonanywhere.com/admins/api/login/', {
             method: 'POST',
             body: JSON.stringify(Object.fromEntries(formData.entries())), // Convert form data to JSON
             headers: {
@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Handle other error statuses
             }
         }).catch(error => {
+            Swal.fire("Error", "Server is not responding. Please try again later", "error");
                 console.error('Server is not responding. Please try again later.');
         });
         

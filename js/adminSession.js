@@ -8,23 +8,46 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function fetchSession() {
-        fetch("http://127.0.0.1:8000/nysc_church/api/list/session/", {
+        fetch("https://lucky1999.pythonanywhere.com/nysc_church/api/list/session/", {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             }
         })
-            .then(response => {
-                if (!response.ok) {
+        .then(response => {
+            if (response.status === 401) {
+                // Handle Unauthorized error
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: "Unauthorized Access. Redirecting to login.",
+                });
+                window.location.href = 'index.html';
+                return null;  // Stop further execution
+            } 
+            else if (response.status === 400) {
+                // Handle Bad Request error
+                return response.json().then(errorData => {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        text: "Network response was not ok",
+                        text: errorData.message || "Bad request",
                     });
-                }
-                return response.json();
-            })
+                    return null;  // Stop further execution
+                });
+            }
+            else if (!response.ok) {
+                // Handle any other errors
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: "Network response was not ok.",
+                });
+                return null;
+            }
+            return response.json();
+        })
             .then(data => {    
             const sessionsContainer = document.getElementById("sessionsContainer");
             sessionsContainer.innerHTML = ""; // Clear previous content
@@ -74,25 +97,48 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     function updateSessionStatus(sessionId, newStatus) {
-        fetch(`http://127.0.0.1:8000/nysc_church/api/mark/session/active?id=${sessionId}`, {
+        fetch(`https://lucky1999.pythonanywhere.com/nysc_church/api/mark/session/active?id=${sessionId}`, {
             method: "POST",
             headers: {
+                'Authorization': `Bearer ${token}`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({ active: newStatus })
         })
-        .then(async response => {
-            const data = await response.json();
-            if (!response.ok) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: data.detail || "Failed to update session.",
-                });
-            }
-            return data;
-        })
-        .then(data => {
+            .then( async response => {
+                if (response.status === 401) {
+                    // Handle Unauthorized error
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: "Unauthorized Access. Redirecting to login.",
+                    });
+                    window.location.href = 'index.html';
+                    return null;  // Stop further execution
+                } 
+                else if (response.status === 400) {
+                    // Handle Bad Request error
+                    return response.json().then(errorData => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: errorData.message || "Bad request",
+                        });
+                        return null;  // Stop further execution
+                    });
+                }
+                else if (!response.ok) {
+                    // Handle any other errors
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: "Network response was not ok.",
+                    });
+                    return null;
+                }
+                return await response.json();
+            })
+            .then(data => {
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
@@ -124,15 +170,48 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         
         
-        fetch('http://127.0.0.1:8000/nysc_church/api/api/add/session/', {
+        fetch('https://lucky1999.pythonanywhere.com/nysc_church/api/api/add/session/', {
             method: 'POST',
             body: JSON.stringify(formData),
             headers: {
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => response.json()) 
-        .then(data => {
+        .then( async response => {
+            if (response.status === 401) {
+                // Handle Unauthorized error
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: "Unauthorized Access. Redirecting to login.",
+                });
+                window.location.href = 'index.html';
+                return null;  // Stop further execution
+            } 
+            else if (response.status === 400) {
+                // Handle Bad Request error
+                return response.json().then(errorData => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: errorData.message || "Bad request",
+                    });
+                    return null;  // Stop further execution
+                });
+            }
+            else if (!response.ok) {
+                // Handle any other errors
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: "Network response was not ok.",
+                });
+                return null;
+            }
+            return await response.json();
+        })
+    .then(data => {
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
