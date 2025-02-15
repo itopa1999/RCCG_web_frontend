@@ -94,20 +94,24 @@
     <div id="fh5co-events">
         <div class="row animate-box" id="event">
             <div class="col-md-6 col-md-offset-3 text-center fh5co-heading">
-                <h2 id="counter">New Members List (43434)</h2>
+                <h2 id="counter">New Members List (0)</h2>
                 
             </div>
             <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
+                <div class="col-md-3">
                         <input type="text" id="searchInput" class="form-control" placeholder="Search...">
-                    </div>
                 </div>
-                <div class="col-md-4">
-                    <select id="sessionSelect" class="form-select form-control">
-                        <option value="">-- Select Session--</option>
+                <div class="col-md-3">
+                    <select id="sessionSelect" class=" form-control">
+                        <option value="">-- Filter Session--</option>
                     </select>
                 </div>
+
+				<div class="col-md-3">
+                    <button id="downloadCSV" class="btn btn-secondary">Download CSV</button>
+                </div>
+
+				
             </div>
             <div class="table-responsive">
                 <table class="table table-striped table-hover">
@@ -178,6 +182,7 @@
 	<script src="js/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
 
 
 	<!-- jQuery Easing -->

@@ -97,10 +97,62 @@
                 <h2>Sessions</h2>
                 
             </div>
-            <div class="row" id="sessionsContainer">
+			<div class="col-md-4">
+				<a href="http:#addSessionForm"><button id="#addSessionForm" class="btn btn-secondary">Add new Session</button></a>
+			</div>
+            <div class="row mt-5" id="sessionsContainer">
                 
             </div>
         </div>
+
+		<div class="col-md-4">
+			
+			<div class="card mt-5" id="addSessionForm" style="display: none;">
+				<div class="card-header">Add New Session Form</div>
+				<div class="card-body">
+					<form class="addSession" method="post">
+						<!-- Number input -->
+						<div class="form-group">
+							<input type="number" id="year" name="year" placeholder="Enter Session year" class="form-control" required>
+						</div>
+					
+						<!-- First select dropdown (Batch) -->
+						<div class="form-group">
+							<select id="select1" name="batch" class="form-control" required>
+								<option value="">Select Session Batch</option>
+								<option value="Batch A">Batch A</option>
+								<option value="Batch B">Batch B</option>
+								<option value="Batch C">Batch C</option>
+							</select>
+						</div>
+					
+						<!-- Second select dropdown (Stream) -->
+						<div class="form-group">
+							<select id="select2" name="stream" class="form-control" required>
+								<option value="">Select a Batch first</option>
+								<!-- Stream options will be populated based on batch selection -->
+							</select>
+						</div>
+					
+						<!-- Radio button -->
+						<div class="form-group">
+							<input type="checkbox" id="checkbox1" name="active" value="yes">
+							<label for="checkbox1">Set has current session:</label><br>
+	
+						</div>
+					
+						<!-- Submit button -->
+						<div class="form-group">
+							<button type="submit" class="btn btn-primary">Submit</button>
+						</div>
+					</form>
+	
+			</div>
+		</div>
+		</div>
+
+		
+
 
 
         </div>
@@ -138,6 +190,7 @@
 	<div class="gototop js-top">
 		<a href="#" class="js-gotop"><i class="icon-arrow-up2"></i></a>
 	</div>
+
 	
 	<!-- jQuery -->
 	<script src="js/jquery.min.js"></script>

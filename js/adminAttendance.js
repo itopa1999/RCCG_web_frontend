@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedStream = "";
     let searchQuery = "";
 
-    function fetchNewComers() {
-        let url = `http://127.0.0.1:8000/nysc_church/api/list/newComers/?page=${currentPage}`;
+    function fetchAttendances() {
+        let url = `http://127.0.0.1:8000/nysc_church/api/list/attendance/?page=${currentPage}`;
 
         // Append filters if available
         if (selectedYear) url += `&year=${selectedYear}`;
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let counter = document.getElementById("counter");
 
                 // Update counter
-                counter.innerHTML = `New Members List (${data.results.length})`;
+                counter.innerHTML = `Attendances List (${data.results.length})`;
             }
         })
         .catch(error => {
@@ -74,14 +74,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 <tr>
                     <td>${index + 1}</td>
                     <td>${member.name}</td>
-                    <td>${member.email || "N/A"}</td>
                     <td>${member.phone}</td>
                     <td>${member.batch}</td>
                     <td>${member.stream}</td>
                     <td>${member.year}</td>
                     <td>${member.state_code}</td>
-                    <td>${member.dob}</td>
-                    <td>${member.department}</td>
                     <td>${new Date(member.date).toLocaleString()}</td>
                 </tr>
             `;
@@ -99,14 +96,14 @@ document.addEventListener('DOMContentLoaded', function () {
         nextButton.onclick = () => {
             if (nextPage) {
                 currentPage++;
-                fetchNewComers();
+                fetchAttendances();
             }
         };
 
         prevButton.onclick = () => {
             if (previousPage) {
                 currentPage--;
-                fetchNewComers();
+                fetchAttendances();
             }
         };
     }
@@ -140,13 +137,13 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             selectedYear = selectedBatch = selectedStream = "";
         }
-        fetchNewComers();  // Refresh data with new filters
+        fetchAttendances();  // Refresh data with new filters
     });
 
     // **Filter on search input**
     document.getElementById("searchInput").addEventListener("input", function () {
         searchQuery = this.value.trim();
-        fetchNewComers();  // Refresh data with search filter
+        fetchAttendances();  // Refresh data with search filter
     });
 
 
@@ -173,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ws_data.push([sessionTitle]);
 
         // Define headers
-        let headers = ["#", "Name", "Email", "Phone", "Batch", "Stream", "Year", "State Code", "DOB", "Department", "Date"];
+        let headers = ["#", "Name", "Phone", "Batch", "Stream", "Year", "State Code", "Date"];
         ws_data.push(headers);
 
         // Add data
@@ -182,14 +179,11 @@ document.addEventListener('DOMContentLoaded', function () {
             ws_data.push([
                 index + 1, 
                 member.name, 
-                member.email || "N/A", 
                 member.phone, 
                 member.batch, 
                 member.stream, 
                 member.year, 
                 member.state_code, 
-                member.dob, 
-                member.department, 
                 formattedDate  // Last column (Date)
             ]);
         });
@@ -238,10 +232,10 @@ document.addEventListener('DOMContentLoaded', function () {
             ws[cellAddress].s = { font: { bold: true } };  // Apply bold style
         }
 
-        XLSX.utils.book_append_sheet(wb, ws, "NewComers");
+        XLSX.utils.book_append_sheet(wb, ws, "Attendance");
 
         // Export file
-        XLSX.writeFile(wb, "NewComers_List.xlsx");
+        XLSX.writeFile(wb, "Attendances_List.xlsx");
 
     }
 
@@ -282,5 +276,5 @@ document.addEventListener('DOMContentLoaded', function () {
         // document.body.removeChild(a);
     }
 
-    fetchNewComers();  // Initial data load
+    fetchAttendances();  // Initial data load
 });
